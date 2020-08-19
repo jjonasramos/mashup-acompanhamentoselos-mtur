@@ -111,15 +111,13 @@ require( ["js/qlik"], function ( qlik ) {
 	app.getObject('filters1','TAqzYx');
 	app.getObject('filters2','gbKhK');
 	app.getObject('filters3','jPuBZ');
-	// app.getObject('filters4','VNNGwbM');
 	app.getObject('filters4','MdpZME');
-
-	// app.getObject('filters5','MdpZME');
-	// app.getObject('filters6','vkmUQWw');
+	app.getObject('filters5','yJbQ');
+	app.getObject('filters6','hCLqWWW');
 
 	app.createGenericObject({
 		selos: {
-			qValueExpression: "=Count(nu_pj_selo)"
+			qValueExpression: "=Count(DISTINCT nu_pj_selo)"
 		}
 	}, (reply) => {
 
@@ -141,12 +139,12 @@ function exportData() {
 	}, (reply) => {
 	
 		const template = [
+			["", "", "", "", "", "", ""],
+			["Turismo Responsável - Selos Emitidos", "", "", "", "", "", ""],
+			["Fonte: Ministério do Turismo", "", "", "", "", "", ""],
+			[`Dados gerados em ${new Date().toLocaleString()}`, "", "", "", "", "", ""],
 			["", "", "", "", ""],
-			["Turismo Responsável - Selos Emitidos", "", "", "", ""],
-			["Fonte: Ministério do Turismo", "", "", "", ""],
-			[`Dados gerados em ${new Date().toLocaleString()}`, "", "", "", ""],
-			["", "", "", "", ""],
-			["UF", " Município", "Data", "Atividade", "Nome fantasia/Nome do guia"]
+			["UF", " Município", "Data", "Atividade", "Nome fantasia/Nome do guia", "Telefone", "E-mail"]
 		];
 		
 		recursiveSequentialFetch({ from: 0, data: template, maxCalls: reply.selos, qtd: 1000 })
@@ -203,13 +201,15 @@ async function fetchData({ from, qtd }) {
 			{ qDef : { qFieldDefs : ["dt_aceite_selo"] } }, 
 			{ qDef : { qFieldDefs : ["no_atividade"] } },
 			{ qDef : { qFieldDefs : ["no_fantasia"] } },
-			{ qDef : {qFieldDefs : ["nu_pj_selo"] } }
+			{ qDef : { qFieldDefs : ["Telefone"] } },
+			{ qDef : { qFieldDefs : ["E-mail"] } },
+			{ qDef : { qFieldDefs : ["nu_pj_selo"] } }
 		],
 		qInitialDataFetch : [{
 			qTop : from,
 			qLeft : 0,
 			qHeight : qtd,
-			qWidth : 6
+			qWidth : 8
 		}]
 	}, function(row) {
 
@@ -219,7 +219,9 @@ async function fetchData({ from, qtd }) {
 				element[1].qText,
 				element[2].qText,
 				element[3].qText,
-				element[4].qText
+				element[4].qText,
+				element[5].qText,
+				element[6].qText
 			];
 
 			temp_dataset.push(temp);
